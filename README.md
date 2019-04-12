@@ -52,7 +52,7 @@ Mine is called cloudnativedev.
 4. Enter: ibmcloud ks cluster-config cloudnativedev
 5. Run the export command that comes back.
 6. Login to the container registry. Enter: sudo ibmcloud cr login
-7. Get a list of your namespaces. Enter: sudo ibmcloud cr namespace-list
+7. Get a list of your namespaces. Enter: sudo ibmcloud cr namespace-list (mine is blm849namespace)
 8. Build your image using the information that came back. Enter: sudo ibmcloud cr build -t registry.ng.bluemix.net/blm849namespace/hello-world:1 .
 Note the ".ng." in the URL. That refers to US South. Also try and use a unique tag. I am using "1" here but if you use the same tag over and over again, you may have issues with your deployment not being updated.
 9. Deploy the app to a single pod with the name hello-world-deployment
@@ -80,7 +80,7 @@ This repo consists of the following files and directories:
 The HTML calls the javascript of the same name, the javascript calls an
 external API, gets the results, and rewrites the HTML with the results of the API call. There is a hello.html and .js file and a random.html and js file.
 - Dockerignore: when working with Docker, rename this file to .Dockerignore
-- README.md: this files
+- README.md: this file
 - other files: LICENCE is the licence file for the repo, and .gitignore prevents some files from not being upload.
 
 ## References
