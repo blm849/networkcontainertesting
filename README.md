@@ -26,9 +26,9 @@ You are now ready to start testing.
 
 1. Enter: node app.js
 2. In your browser, enter: http://localhost:8080
-3. In your browser, enter: http://localhost:8080/hello
+3. In your browser, enter: http://localhost:8080/hello (Note: this no longer works)
 4. In your browser, enter: http://localhost:8080/random
-5. From the window you entered node app.js, enter: ctrl+```
+5. From the window you entered node app.js, enter: ctrl+``` or ctrl+c
 
 ### To test it in a Docker container
 
@@ -36,7 +36,7 @@ You are now ready to start testing.
 2. Check your image is running. Enter: docker images
 3. Create a container with your image. Enter: docker run --name networkcontainertesting -p 80:8080 -d networkcontainertesting
 4. In your browser, enter: http://localhost
-5. In your browser, enter: http://localhost/hello
+5. In your browser, enter: http://localhost/hello (Broken)
 6. In your browser, enter: http://localhost/random
 7. If you have any problems, see if it is running. Enter: docker ps
 8. Now stop the container. Get the container id by running: docker ps
@@ -45,18 +45,18 @@ You are now ready to start testing.
 ### To test it in an IBM Kubernetes cluster
 
 Assuming you have a cluster running already, and you have the ibmcloud command on your machine,  do the following:
-1. Login. Enter: ibmcloud login
+1. Login. Enter: ibmcloud login (I like to login with the --sso option)
 2. Assuming your cluster is running in US South, enter: ibmcloud target -r  us-south (Washington and Toronto are in us-east)
+(You may not need this)
 3. Check your cluster is available. Enter: ibmcloud cs clusters
 Mine is called cloudnativedev.
-4. Enter: ibmcloud ks cluster-config cloudnativedev
-5. Run the export command that comes back.
-6. Login to the container registry. Enter: sudo ibmcloud cr login
-7. Get a list of your namespaces. Enter: sudo ibmcloud cr namespace-list (mine is blm849namespace)
-8. Build your image using the information that came back. Enter: sudo ibmcloud cr build -t registry.ng.bluemix.net/blm849namespace/hello-world:1 .
-Note the ".ng." in the URL. That refers to US South. Also try and use a unique tag. I am using "1" here but if you use the same tag over and over again, you may have issues with your deployment not being updated.
-9. Deploy the app to a single pod with the name hello-world-deployment
-. Enter: kubectl run hello-world-deployment --image=registry.ng.bluemix.net/blm849namespace/hello-world:1
+4. Enter: ibmcloud ks cluster config --cluster cloudnativedev
+5. Login to the container registry. Enter: ibmcloud cr login
+6. Get a list of your namespaces. Enter:  ibmcloud cr namespace-list (mine is blm849namespace)
+7. Build your image using the information that came back. Enter: docker build --no-cache  -t ca.icr.io/blm849namespace/hello-world:1 .
+Try and use a unique tag. I am using "1" here but if you use the same tag over and over again, you may have issues with your deployment not being updated.
+8. Push it to the container registry: docker push ca.icr.io/blm849namespace/hello-world:1 
+9. Deploy the app to a single pod with the name hello-world-deployment. Enter: kubectl run hello-world-deployment --image=ca.icr.io/blm849namespace/hello-world:1
 10. Make the app available to the world. Enter: kubectl expose deployment/hello-world-deployment --type=NodePort --port=8080 --name=hello-world-service --target-port=8080
 11. Determine what the nodeport is. Enter:
 kubectl describe service hello-world-service
@@ -65,7 +65,7 @@ kubectl describe service hello-world-service
 14. If you want to discontinue your application from running, enter:
 - kubectl delete deployment/hello-world-deployment
 - kubectl delete service/hello-world-service
-- sudo ibmcloud cr image-rm blm849namespace/hello-world:1
+- ibmcloud cr image-rm blm849namespace/hello-world:1
 
 
 
