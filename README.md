@@ -5,6 +5,15 @@ This is a simple way to test connectivity in and out of  a Docker container
 
 I had a problem: I needed to have a simple app to deploy as a container that I could use to test and see if my containers, either standalone or within a Kubernetes pod, had outside connectivity to the Internet. To do that, I wrote a simple node.js application that uses  express, some HTML and jQuery. The node.js app either responds directly to the user or it routes the request to the HTML. The HTML use simple javascript to call the API and process the returned Json and then display it using jQuery.
 
+##### Bonus: a simpler set up
+Some of you may not want to use node.js - you just want to test using Docker and Kubernetes. To facilitate that, I have added two Files
+- D24indexfile
+- index.HTML
+
+if you get rid of the Dockerfile that comes with this repo and rename D2indexfile to Dockerfile, you can skip Step 1 and go to Step 2. You will have a simpler set up: it's just a web server with one web page and no integration.
+
+If you go with this route, you do not need npm or node.
+
 ## Assumptions
 
 ##### You have the following on your machine
@@ -12,17 +21,22 @@ I had a problem: I needed to have a simple app to deploy as a container that I c
 2. Docker
 3. npm
 4. node
+5. ibmcloud cli
+
+- You also have an account on _ibm.com/cloud_
 
 ## How to use
 
 1. Get a command prompt and go to a directory you can download this repository (e.g. /temp)
-2. Clone the repo into this directory with this command: git clone https://github.com/blm849/networkcontainertesting
+2. Clone the repo into this directory with this command:
+* git clone https://github.com/blm849/networkcontainertesting
+
 3. Enter: cd networkcontainertesting
 4. Enter: npm install
 
 You are now ready to start testing.
 
-### To test it as a node.js app running locally on your machine:
+### Step 1: test it as a node.js app running locally on your machine:
 
 1. Enter: node app.js
 2. In your browser, enter: http://localhost:8080
@@ -30,7 +44,7 @@ You are now ready to start testing.
 4. In your browser, enter: http://localhost:8080/random
 5. From the window you entered node app.js, enter: ctrl+``` or ctrl+c
 
-### To test it in a Docker container
+### Step 2: test it in a Docker container
 
 1. Build your docker image. Enter: docker build -t networkcontainertesting .
 2. Check your image is running. Enter: docker images
@@ -42,31 +56,35 @@ You are now ready to start testing.
 8. Now stop the container. Get the container id by running: docker ps
 9. You can stop it by entering: _docker stop ID_ where ID is either the container id or the name of the container (i.e.networkcontainertesting)
 
-### To test it in an IBM Kubernetes cluster
+### Step 3: To test it in an IBM Kubernetes cluster
 
 Assuming you have a cluster running already, and you have the ibmcloud command on your machine,  do the following:
-1. Login. Enter: ibmcloud login (I like to login with the --sso option)
-2. Assuming your cluster is running in US South, enter: ibmcloud target -r  us-south (Washington and Toronto are in us-east)
+1. Login. Enter: **ibmcloud login** (I like to login with the --sso option)
+2. Assuming your cluster is running in US South, enter:
+* **ibmcloud target -r  us-south** (Washington and Toronto are in us-east)
 (You may not need this)
-3. Check your cluster is available. Enter: ibmcloud cs clusters
-Mine is called cloudnativedev.
-4. Enter: ibmcloud ks cluster config --cluster cloudnativedev
-5. Login to the container registry. Enter: ibmcloud cr login
-6. Get a list of your namespaces. Enter:  ibmcloud cr namespace-list (mine is blm849namespace)
-7. Build your image using the information that came back. Enter: docker build --no-cache  -t ca.icr.io/blm849namespace/hello-world:1 .
+3. Check your cluster is available. Enter: **ibmcloud cs clusters**
+* Mine is called _cloudnativedev_.
+4. Enter: **ibmcloud ks cluster config --cluster cloudnativedev**
+5. Login to the container registry. Enter: **ibmcloud cr login**
+6. Get a list of your namespaces. Enter:  **ibmcloud cr namespace-list** (mine is _blm849namespace_)
+7. Build your image using the information that came back. Enter: **docker build --no-cache  -t ca.icr.io/blm849namespace/hello-world:1 .**
 Try and use a unique tag. I am using "1" here but if you use the same tag over and over again, you may have issues with your deployment not being updated.
-8. Push it to the container registry: docker push ca.icr.io/blm849namespace/hello-world:1 
-9. Deploy the app to a single pod with the name hello-world-deployment. Enter: kubectl run hello-world-deployment --image=ca.icr.io/blm849namespace/hello-world:1
+8. Push it to the container registry. Enter: **docker push ca.icr.io/blm849namespace/hello-world:1**
+9. Deploy the app to a single pod with the name hello-world-deployment. Enter: **kubectl run hello-world-deployment --image=ca.icr.io/blm849namespace/hello-world:1**
 10. Make the app available to the world. Enter: kubectl expose deployment/hello-world-deployment --type=NodePort --port=8080 --name=hello-world-service --target-port=8080
 11. Determine what the nodeport is. Enter:
-kubectl describe service hello-world-service
-12. Determine the public facing IP of node. Enter: ibmcloud ks workers --cluster cloudnativedev
-13. Combine the public IP and nodeport to call your app. Enter in your browser, enter: http://public_IP:nodeport and then enter: http://public_IP:nodeport/hello and then enter: http://public_IP:nodeport/random
-14. If you want to discontinue your application from running, enter:
-- kubectl delete deployment/hello-world-deployment
-- kubectl delete service/hello-world-service
-- ibmcloud cr image-rm blm849namespace/hello-world:1
+**kubectl describe service hello-world-service**
+12. Determine the public facing IP of node. Enter: **ibmcloud ks workers --cluster cloudnativedev**
+13. Combine the public IP and nodeport to call your app. Enter in your browser:
+* http://public_IP:nodeport
 
+* http://public_IP:nodeport/random
+
+14. If you want to discontinue your application from running, enter:
+- **kubectl delete deployment/hello-world-deployment**
+- **kubectl delete service/hello-world-service**
+- **ibmcloud cr image-rm blm849namespace/hello-world:1**
 
 
 ## Files
@@ -82,6 +100,8 @@ external API, gets the results, and rewrites the HTML with the results of the AP
 - Dockerignore: when working with Docker, rename this file to .Dockerignore
 - README.md: this file
 - other files: LICENCE is the licence file for the repo, and .gitignore prevents some files from not being upload.
+- D24indexfile: an alternative Dockerfile
+- index.HTML: a file to go with the alternative Dockerfile
 
 ## References
 

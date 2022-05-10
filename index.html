@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Hello World!</h1>
+
+<p id="demo"></p>
+
+<script>
+let protocol = location.protocol;
+document.getElementById("demo").innerHTML = protocol;
+let hostname = location.hostname;
+let port = location.port;
+document.getElementById("demo").innerHTML = "The protocol, hostname and port number of the current page is: " + protocol + "//" +  hostname + ":" +  port;
+</script>
+
+
+</body>
+</html
