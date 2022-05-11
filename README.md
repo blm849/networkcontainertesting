@@ -40,9 +40,10 @@ You are now ready to start testing.
 
 1. Enter: node app.js
 2. In your browser, enter: http://localhost:8080
-3. In your browser, enter: http://localhost:8080/hello (Note: this no longer works)
+3. In your browser, enter: http://localhost:8080/useless 
 4. In your browser, enter: http://localhost:8080/random
-5. From the window you entered node app.js, enter: ctrl+``` or ctrl+c
+5. In your browser, enter: http://localhost:8080/fox
+6. From the window you entered node app.js, enter: ctrl+``` or ctrl+c
 
 ### Step 2: test it in a Docker container
 
@@ -50,11 +51,12 @@ You are now ready to start testing.
 2. Check your image is running. Enter: docker images
 3. Create a container with your image. Enter: docker run --name networkcontainertesting -p 80:8080 -d networkcontainertesting
 4. In your browser, enter: http://localhost
-5. In your browser, enter: http://localhost/hello (Broken)
+5. In your browser, enter: http://localhost/useless
 6. In your browser, enter: http://localhost/random
-7. If you have any problems, see if it is running. Enter: docker ps
-8. Now stop the container. Get the container id by running: docker ps
-9. You can stop it by entering: _docker stop ID_ where ID is either the container id or the name of the container (i.e.networkcontainertesting)
+7. In your browser, enter: http://localhost/fox
+8. If you have any problems, see if it is running. Enter: docker ps
+9. Now stop the container. Get the container id by running: docker ps
+10. You can stop it by entering: _docker stop ID_ where ID is either the container id or the name of the container (i.e.networkcontainertesting)
 
 ### Step 3: To test it in an IBM Kubernetes cluster
 

@@ -20,10 +20,15 @@ router.get('/random', function(req,res){
   res.sendFile(path + 'random.html');
 });
 
-router.get('/hello', function(req,res){
-  res.sendFile(path + 'hello.html');
+router.get('/useless', function(req,res){
+  res.sendFile(path + 'useless.html');
 });
 
+router.get('/fox', function(req,res){
+  res.sendFile(path + 'fox.html');
+});
+
+app.use(express.static(path));
 app.use(express.static(path));
 app.use('/', router);
 
